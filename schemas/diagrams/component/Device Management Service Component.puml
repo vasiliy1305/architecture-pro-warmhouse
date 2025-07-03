@@ -1,0 +1,26 @@
+@startuml
+title Device Management Service Component Diagram
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Container_Boundary(DeviceSystem, "Device Service") {
+  Container(DeviceAPI, "Device API", "Go", "Handles device commands")
+  Container(Database, "Device Database", "PostgreSQL", "Stores device configurations")
+  Container(MQTTBroker, "MQTT Broker", "RabbitMQ", "Handles device communication")
+}
+
+Container(DeviceAPI, "Device API", "Go") {
+  Component(DeviceController, "DeviceController", "Manages device states")
+  Component(CommandController, "CommandController", "Processes commands")
+  Component(ServiceLayer, "Service Layer", "Business logic")
+  Component(RepositoryLayer, "Repository Layer", "Data access logic")
+}
+
+Rel(DeviceController,ServiceLayer,"Calls business logic")
+Rel(CommandController,ServiceLayer,"Calls business logic")
+Rel(ServiceLayer,RepositoryLayer,"Reads/Writes data")
+Rel(RepositoryLayer,Database,"Stores device data")
+Rel(ServiceLayer,MQTTBroker,"Sends commands")
+@enduml

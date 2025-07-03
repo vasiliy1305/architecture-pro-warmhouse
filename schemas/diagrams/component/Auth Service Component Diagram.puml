@@ -1,0 +1,26 @@
+@startuml
+title Auth Service Component Diagram
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Container_Boundary(AuthSystem, "Auth Service") {
+  Container(AuthAPI, "Auth API", "Node.js", "Handles authentication requests")
+  Container(Database, "User Database", "PostgreSQL", "Stores user credentials and profiles")
+}
+
+Container(AuthAPI, "Auth API", "Node.js") {
+  Component(AuthController, "AuthController", "Handles login/logout")
+  Component(UserController, "UserController", "Manages user accounts")
+  Component(RoleController, "RoleController", "Manages permissions")
+  Component(ServiceLayer, "Service Layer", "Business logic")
+  Component(RepositoryLayer, "Repository Layer", "Data access logic")
+}
+
+Rel(AuthController,ServiceLayer,"Calls business logic")
+Rel(UserController,ServiceLayer,"Calls business logic")
+Rel(RoleController,ServiceLayer,"Calls business logic")
+Rel(ServiceLayer,RepositoryLayer,"Reads/Writes data")
+Rel(RepositoryLayer,Database,"Stores user data")
+@enduml

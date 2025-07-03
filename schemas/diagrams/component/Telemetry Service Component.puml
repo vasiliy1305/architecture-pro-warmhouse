@@ -1,0 +1,26 @@
+@startuml
+title Telemetry Service Component Diagram
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Container_Boundary(TelemetrySystem, "Telemetry Service") {
+  Container(IngestionAPI, "Ingestion API", "Java", "Receives device telemetry")
+  Container(TimeSeriesDB, "TimeSeries DB", "InfluxDB", "Stores metrics data")
+  Container(AnalyticsEngine, "Analytics Engine", "Python", "Processes metrics")
+}
+
+Container(IngestionAPI, "Ingestion API", "Java") {
+  Component(Collector, "Data Collector", "Receives device data")
+  Component(Processor, "Stream Processor", "Processes telemetry")
+  Component(ServiceLayer, "Service Layer", "Business logic")
+  Component(RepositoryLayer, "Repository Layer", "Data access logic")
+}
+
+Rel(Collector,ServiceLayer,"Sends raw data")
+Rel(Processor,ServiceLayer,"Processes streams")
+Rel(ServiceLayer,RepositoryLayer,"Reads/Writes data")
+Rel(RepositoryLayer,TimeSeriesDB,"Stores metrics")
+Rel(ServiceLayer,AnalyticsEngine,"Sends for analysis")
+@enduml
