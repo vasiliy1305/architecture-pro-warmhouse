@@ -1,0 +1,48 @@
+@startuml
+entity "User" {
+  *id: integer <<generated>>
+  --
+  *name: varchar
+  *email: varchar
+  *password_hash: varchar
+  created_at: timestamp
+}
+
+entity "House" {
+  *id: integer <<generated>>
+  --
+  *user_id: integer <<FK>>
+  *address: varchar
+  created_at: timestamp
+}
+
+entity "DeviceType" {
+  *id: integer <<generated>>
+  --
+  *name: varchar
+  description: text
+}
+
+entity "Device" {
+  *id: integer <<generated>>
+  --
+  *house_id: integer <<FK>>
+  *type_id: integer <<FK>>
+  *serial_number: varchar
+  status: varchar
+  created_at: timestamp
+}
+
+entity "TelemetryData" {
+  *id: integer <<generated>>
+  --
+  *device_id: integer <<FK>>
+  *value: float
+  *timestamp: timestamp
+}
+
+User ||--o{ House : "owns"
+House ||--o{ Device : "contains"
+Device }o--|| DeviceType : "has_type"
+Device ||--o{ TelemetryData : "produces"
+@enduml
