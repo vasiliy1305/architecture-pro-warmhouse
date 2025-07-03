@@ -95,7 +95,17 @@
 
 **Диаграмма кода (Code)**
 
-Добавьте одну диаграмму или несколько.
+```markdown
+[управление устройствами.](https://github.com/vasiliy1305/architecture-pro-warmhouse/blob/warmhouse/schemas/diagrams/code/Device%20Management%20Code.puml)
+```
+
+```markdown
+[телеметрия.](https://github.com/vasiliy1305/architecture-pro-warmhouse/blob/warmhouse/schemas/diagrams/code/Telemetry%20Service%20Code.puml)
+```
+
+```markdown
+[авторизация.](https://github.com/vasiliy1305/architecture-pro-warmhouse/blob/warmhouse/schemas/diagrams/code/Auth%20Service%20Code.puml)
+```
 
 # Задание 3. Разработка ER-диаграммы
 
