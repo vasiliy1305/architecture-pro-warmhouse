@@ -71,18 +71,8 @@
 
 ### 5. Визуализация контекста системы — диаграмма С4
 
-Добавьте сюда диаграмму контекста в модели C4.
-
-Чтобы добавить ссылку в файл Readme.md, нужно использовать синтаксис Markdown. Это делают так:
-
 ```markdown
-[контекст](https://github.com/vasiliy1305/architecture-pro-warmhouse/blob/warmhouse/schemas/diagrams/context/Context.puml)
-```
-
-Замените `Текст ссылки` текстом, который хотите использовать для ссылки. Вместо `URL` вставьте адрес, на который должна вести ссылка. Например:
-
-```markdown
-[Посетите Яндекс](https://ya.ru/)
+[Диаграмма контекста в модели C4.](https://github.com/vasiliy1305/architecture-pro-warmhouse/blob/warmhouse/schemas/diagrams/context/Context.puml)
 ```
 
 # Задание 2. Проектирование микросервисной архитектуры
