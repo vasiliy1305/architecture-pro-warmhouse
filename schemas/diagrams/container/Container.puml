@@ -1,0 +1,38 @@
+@startuml
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Container.puml
+
+Person(user, "End User", "Controls smart home devices")
+Person(admin, "System Administrator", "Manages system and users")
+
+System_Boundary(system, "WARMHOUSE") {
+    Container(web_app, "Web Application", "React", "User interface")
+    Container(admin_ui, "Admin Dashboard", "React", "Management console")
+    Container(device_mgmt, "Device Management", "Go", "Device control")
+    Container(telemetry, "Telemetry Service", "Go", "Data collection")
+    Container(auth, "Auth Service", "Node.js", "Authentication & authorization")
+    ContainerDb(postgres, "Database", "PostgreSQL", "Data storage")
+    ContainerQueue(rabbitmq, "Message Broker", "RabbitMQ", "Async communication")
+}
+
+
+
+' User interactions
+Rel(user, web_app, "Uses", "HTTPS")
+Rel(web_app, device_mgmt, "API calls", "gRPC")
+Rel(web_app, telemetry, "Gets data", "REST")
+Rel(web_app, auth, "Token validation", "JWT")
+
+
+' Admin interactions
+Rel(admin, admin_ui, "Manages system", "HTTPS")
+Rel(admin_ui, auth, "User management", "gRPC")
+Rel(admin_ui, device_mgmt, "Device management", "gRPC")
+Rel(admin_ui, telemetry, "Views metrics", "REST")
+
+' Service interactions
+Rel(device_mgmt, rabbitmq, "Sends commands", "MQ")
+Rel(telemetry, rabbitmq, "Receives events", "MQ")
+Rel(telemetry, postgres, "Writes data", "SQL")
+Rel(device_mgmt, postgres, "Reads/writes", "SQL")
+Rel(auth, postgres, "Stores credentials", "SQL")
+@enduml

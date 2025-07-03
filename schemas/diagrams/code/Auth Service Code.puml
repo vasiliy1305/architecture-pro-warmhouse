@@ -1,0 +1,38 @@
+@startuml
+title Auth Service Code Diagram
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+class User {
+  +String username
+  +String passwordHash
+  +String email
+  +List<Role> roles
+  +boolean authenticate()
+  +void addRole()
+}
+
+class Role {
+  +String name
+  +List<Permission> permissions
+  +void addPermission()
+}
+
+class Permission {
+  +String resource
+  +String action
+}
+
+class Session {
+  +String token
+  +Date expiresAt
+  +User user
+  +boolean isValid()
+}
+
+User "1" -- "0..*" Role : has
+Role "1" -- "0..*" Permission : includes
+User "1" -- "0..*" Session : maintains
+@enduml
