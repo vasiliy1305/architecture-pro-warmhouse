@@ -110,7 +110,7 @@
 # Задание 3. Разработка ER-диаграммы
 
 ```markdown
-[ER-диаграмма.]()
+[ER-диаграмма.](https://github.com/vasiliy1305/architecture-pro-warmhouse/blob/warmhouse/schemas/diagrams/ER.puml)
 ```
 
 # Задание 4. Создание и документирование API
