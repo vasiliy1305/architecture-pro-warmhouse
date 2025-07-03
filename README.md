@@ -125,6 +125,12 @@ AsyncAPI для сбора телеметрии (через RabbitMQ)
 
 Здесь приложите ссылки на документацию API для микросервисов, которые вы спроектировали в первой части проектной работы. Для документирования используйте Swagger/OpenAPI или AsyncAPI.
 
+
+```markdown
+[ER-диаграмма.](https://github.com/vasiliy1305/architecture-pro-warmhouse/blob/warmhouse/schemas/openapi.yaml)
+```
+
+
 # Задание 5. Работа с docker и docker-compose
 
 Перейдите в apps.
