@@ -1,0 +1,34 @@
+@startuml
+title Device Management Code Diagram
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+class Device {
+  +String id
+  +String type
+  +String location
+  +String status
+  +void turnOn()
+  +void turnOff()
+  +void updateStatus()
+}
+
+class Command {
+  +String deviceId
+  +String action
+  +Date timestamp
+  +void execute()
+}
+
+class House {
+  +String address
+  +List<Device> devices
+  +void addDevice()
+  +void removeDevice()
+}
+
+House "1" -- "0..*" Device : contains
+Device "1" -- "0..*" Command : receives
+@enduml

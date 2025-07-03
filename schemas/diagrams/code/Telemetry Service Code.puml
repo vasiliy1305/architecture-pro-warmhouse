@@ -1,0 +1,21 @@
+@startuml
+title Telemetry Service Code Diagram
+
+top to bottom direction
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+class Sensor {
+  +String deviceId
+  +String type
+  +String unit
+}
+
+class Measurement {
+  +String sensorId
+  +float value
+  +Date timestamp
+  +void measure()
+}
+
+Sensor "1" -- "0..*" Measurement : produces
+@enduml
