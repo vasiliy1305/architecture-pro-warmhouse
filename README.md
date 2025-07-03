@@ -86,7 +86,19 @@
 
 **Диаграмма компонентов (Components)**
 
-Добавьте диаграмму для каждого из выделенных микросервисов.
+```markdown
+[Диаграмма - управление устройствами.](https://github.com/vasiliy1305/architecture-pro-warmhouse/blob/warmhouse/schemas/diagrams/component/Device%20Management%20Service%20Component.puml)
+```
+
+```markdown
+[Диаграмма - телеметрия.](https://github.com/vasiliy1305/architecture-pro-warmhouse/blob/warmhouse/schemas/diagrams/component/Telemetry%20Service%20Component.puml)
+```
+
+```markdown
+[Диаграмма - авторизация.](https://github.com/vasiliy1305/architecture-pro-warmhouse/blob/warmhouse/schemas/diagrams/component/Auth%20Service%20Component%20Diagram.puml)
+```
+
+компонет базы данных и телеметрии - тривиальны
 
 **Диаграмма кода (Code)**
 
