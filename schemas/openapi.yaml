@@ -1,0 +1,323 @@
+openapi: 3.0.3
+info:
+  title: Smart Home Microservices API
+  version: 1.0.0
+  description: |
+    Документация API для умного дома:
+    - Управление устройствами
+    - Аутентификация пользователей
+    - Сбор телеметрии
+  contact:
+    email: api@smarthome.example.com
+
+servers:
+  - url: https://api.smarthome.example.com
+    description: Production server
+  - url: https://dev-api.smarthome.example.com
+    description: Development server
+
+tags:
+  - name: Authentication
+    description: Регистрация и управление доступом
+  - name: Devices
+    description: Управление IoT устройствами
+  - name: Telemetry
+    description: Данные с датчиков
+
+paths:
+  # ================== Auth Service ==================
+  /auth/register:
+    post:
+      tags: [Authentication]
+      summary: Регистрация пользователя
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegister'
+      responses:
+        '201':
+          description: Пользователь создан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '409':
+          description: Пользователь уже существует
+
+  /auth/login:
+    post:
+      tags: [Authentication]
+      summary: Аутентификация
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserLogin'
+      responses:
+        '200':
+          description: Успешный вход
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          description: Неверные учетные данные
+
+  # ================== Device Service ==================
+  /devices:
+    get:
+      tags: [Devices]
+      summary: Получить список устройств
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/houseId'
+      responses:
+        '200':
+          description: Список устройств
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Device'
+
+    post:
+      tags: [Devices]
+      summary: Добавить устройство
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceCreate'
+      responses:
+        '201':
+          description: Устройство создано
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+
+  /devices/{deviceId}/command:
+    post:
+      tags: [Devices]
+      summary: Отправить команду устройству
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/deviceId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceCommand'
+      responses:
+        '202':
+          description: Команда принята
+        '404':
+          description: Устройство не найдено
+
+  # ================== Telemetry Service ==================
+  /telemetry:
+    get:
+      tags: [Telemetry]
+      summary: Получить телеметрию
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/deviceId'
+        - $ref: '#/components/parameters/timeRange'
+      responses:
+        '200':
+          description: Данные телеметрии
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TelemetryData'
+
+  /telemetry/alerts:
+    get:
+      tags: [Telemetry]
+      summary: Получить активные алерты
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Список алертов
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Alert'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    deviceId:
+      name: deviceId
+      in: path
+      required: true
+      schema:
+        type: string
+      example: "thermostat-living-room-1"
+    houseId:
+      name: houseId
+      in: query
+      schema:
+        type: string
+      example: "house-123"
+    timeRange:
+      name: timeRange
+      in: query
+      schema:
+        type: string
+        enum: [1h, 24h, 7d, 30d]
+      description: Период выборки данных
+
+  schemas:
+    # Auth Schemas
+    UserRegister:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 8
+        name:
+          type: string
+      example:
+        email: "user@example.com"
+        password: "securePass123"
+        name: "Иван Иванов"
+
+    UserLogin:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      example:
+        email: "user@example.com"
+        password: "securePass123"
+
+    AuthResponse:
+      type: object
+      properties:
+        token:
+          type: string
+        expiresIn:
+          type: integer
+      example:
+        token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        expiresIn: 3600
+
+    # Device Schemas
+    Device:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          enum: [thermostat, light, camera, lock]
+        name:
+          type: string
+        status:
+          type: string
+          enum: [online, offline, error]
+        lastSeen:
+          type: string
+          format: date-time
+      example:
+        id: "thermostat-living-room-1"
+        type: "thermostat"
+        name: "Living Room Thermostat"
+        status: "online"
+        lastSeen: "2023-05-20T12:34:56Z"
+
+    DeviceCreate:
+      type: object
+      required: [type, name]
+      properties:
+        type:
+          type: string
+        name:
+          type: string
+        location:
+          type: string
+      example:
+        type: "light"
+        name: "Kitchen Light"
+        location: "kitchen"
+
+    DeviceCommand:
+      type: object
+      required: [command]
+      properties:
+        command:
+          type: string
+          enum: [ON, OFF, LOCK, UNLOCK, SET_TEMP]
+        value:
+          type: number
+          description: Для команд типа SET_TEMP
+      example:
+        command: "SET_TEMP"
+        value: 22.5
+
+    # Telemetry Schemas
+    TelemetryData:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        value:
+          type: number
+        unit:
+          type: string
+      example:
+        timestamp: "2023-05-20T12:34:56Z"
+        value: 22.5
+        unit: "°C"
+
+    Alert:
+      type: object
+      properties:
+        id:
+          type: string
+        deviceId:
+          type: string
+        message:
+          type: string
+        severity:
+          type: string
+          enum: [low, medium, high, critical]
+        timestamp:
+          type: string
+          format: date-time
+      example:
+        id: "alert-123"
+        deviceId: "thermostat-living-room-1"
+        message: "High temperature detected"
+        severity: "high"
+        timestamp: "2023-05-20T12:34:56Z"
